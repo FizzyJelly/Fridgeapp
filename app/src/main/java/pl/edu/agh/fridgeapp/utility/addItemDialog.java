@@ -1,8 +1,10 @@
 package pl.edu.agh.fridgeapp.utility;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +37,28 @@ public class addItemDialog extends DialogFragment {
         Spinner categorySpinner=dialogView.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(spinnerAdapter);
 
+        EditText dateEdit = dialogView.findViewById(R.id.expiry_date_input);
+        dateEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerFragment dateDialog=new DatePickerFragment();
+                dateDialog.setDateEdit(dateEdit);
+                dateDialog.show(context.getFragmentManager(),new String("get"));
+            }
+        });
+
         Button button=dialogView.findViewById(R.id.accept_item_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ItemCategory category=ItemCategory.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
-                String name=((EditText) dialogView.findViewById(R.id.item_name)).getText().toString();
-                FridgeItem newItem=new FridgeItem(name, new ExpiryDate(3, 1, 2019), "Such an item it is!!", Double.parseDouble("22.11"), 2, category, new User("User"), new User("Wiesiek"));
+                String name=((EditText) dialogView.findViewById(R.id.item_name_input)).getText().toString();
+                Integer quantity=Integer.parseInt(((EditText) dialogView.findViewById(R.id.quantity_input)).getText().toString());
+                int year=Integer.parseInt(dateEdit.getText().toString().substring(0,2));
+                int month=Integer.parseInt(dateEdit.getText().toString().substring(3,5));
+                int day=Integer.parseInt(dateEdit.getText().toString().substring(6,10));
+                ExpiryDate expiryDate=new ExpiryDate(year,month,day);
+                FridgeItem newItem=new FridgeItem(name, expiryDate, "Such an item it is!!", Double.parseDouble("22.11"), quantity, category, new User("User"), new User("Wiesiek"));
                 context.getFridge().addItem(newItem);
                 dismiss();
             }

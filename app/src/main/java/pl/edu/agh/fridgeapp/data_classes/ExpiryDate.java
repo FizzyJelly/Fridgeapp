@@ -39,7 +39,7 @@ public class ExpiryDate implements Comparable{
         return 0;
     }
 
-    public int dayDifference(ExpiryDate date){
+    public int dayDifference(ExpiryDate date){ //Write one that does not use Date class
         Date date1=new Date(date.year,date.month,date.day);
         Date date2=new Date(this.year,this.month,this.day);
         return date2.compareTo(date1);

@@ -9,19 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
 
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
-import pl.edu.agh.fridgeapp.client.Toaster;
-import pl.edu.agh.fridgeapp.data_classes.ExpiryDate;
 import pl.edu.agh.fridgeapp.data_classes.FridgeItem;
 import pl.edu.agh.fridgeapp.data_classes.ItemCategory;
-import pl.edu.agh.fridgeapp.fridge.User;
 
 public class ContentsListAdapter extends RecyclerView.Adapter implements Observer {
 
@@ -61,7 +56,7 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         LinearLayout layout = (LinearLayout) holder.itemView;
 
-        TextView name = layout.findViewById(R.id.item_name);
+        TextView name = layout.findViewById(R.id.item_name_input);
         TextView quantity = layout.findViewById(R.id.quantity);
         TextView expiryDate = layout.findViewById(R.id.expiry_date);
         TextView owner = layout.findViewById(R.id.owner);
