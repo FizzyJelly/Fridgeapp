@@ -1,10 +1,8 @@
 package pl.edu.agh.fridgeapp.utility;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.widget.Spinner;
 
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
+import pl.edu.agh.fridgeapp.client.Toaster;
 import pl.edu.agh.fridgeapp.data_classes.ExpiryDate;
 import pl.edu.agh.fridgeapp.data_classes.FridgeItem;
 import pl.edu.agh.fridgeapp.data_classes.ItemCategory;
@@ -30,39 +29,65 @@ public class addItemDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         LayoutInflater infalter = context.getLayoutInflater();
-        View dialogView=infalter.inflate(R.layout.add_item_dialog,null);
+        View dialogView = infalter.inflate(R.layout.add_item_dialog, null);
         builder.setView(dialogView);
 
-        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(context,android.R.layout.simple_spinner_dropdown_item,context.getFridge().getCategories());
-        Spinner categorySpinner=dialogView.findViewById(R.id.category_spinner);
+        EditText itemNameInput = dialogView.findViewById(R.id.item_name_input);
+        EditText quantityInput = dialogView.findViewById(R.id.quantity_input);
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, context.getFridge().getCategories());
+        Spinner categorySpinner = dialogView.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(spinnerAdapter);
 
         EditText dateEdit = dialogView.findViewById(R.id.expiry_date_input);
         dateEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerFragment dateDialog=new DatePickerFragment();
+                DatePickerFragment dateDialog = new DatePickerFragment();
                 dateDialog.setDateEdit(dateEdit);
-                dateDialog.show(context.getFragmentManager(),new String("get"));
+                dateDialog.show(context.getFragmentManager(), new String("get"));
             }
         });
 
-        Button button=dialogView.findViewById(R.id.accept_item_button);
+        Button button = dialogView.findViewById(R.id.accept_item_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemCategory category=ItemCategory.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
-                String name=((EditText) dialogView.findViewById(R.id.item_name_input)).getText().toString();
-                Integer quantity=Integer.parseInt(((EditText) dialogView.findViewById(R.id.quantity_input)).getText().toString());
-                int year=Integer.parseInt(dateEdit.getText().toString().substring(0,2));
-                int month=Integer.parseInt(dateEdit.getText().toString().substring(3,5));
-                int day=Integer.parseInt(dateEdit.getText().toString().substring(6,10));
-                ExpiryDate expiryDate=new ExpiryDate(year,month,day);
-                FridgeItem newItem=new FridgeItem(name, expiryDate, "Such an item it is!!", Double.parseDouble("22.11"), quantity, category, new User("User"), new User("Wiesiek"));
-                context.getFridge().addItem(newItem);
-                dismiss();
+                StringBuilder missing = new StringBuilder();
+                String name="";
+                ExpiryDate expiryDate=new ExpiryDate(0,0,0);
+                Integer quantity=0;
+                ItemCategory category = ItemCategory.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
+                if (itemNameInput.getText().length() == 0) {
+                    missing.append("Item name \n");
+
+                } else {
+                    name = itemNameInput.getText().toString();
+                }
+                if (quantityInput.getText().length() == 0) {
+                    missing.append("Quantity \n");
+                } else {
+                    quantity = Integer.parseInt(quantityInput.getText().toString());
+                }
+                if (dateEdit.getText().length() == 0) {
+                    missing.append("Expiry date \n");
+                } else {
+                    int year = Integer.parseInt(dateEdit.getText().toString().substring(0, 2));
+                    int month = Integer.parseInt(dateEdit.getText().toString().substring(3, 5));
+                    int day = Integer.parseInt(dateEdit.getText().toString().substring(6, 10));
+                    expiryDate = new ExpiryDate(year, month, day);
+                }
+                if(missing.length()==0) {
+                    FridgeItem newItem = new FridgeItem(name, expiryDate, "Such an item it is!!", Double.parseDouble("22.11"), quantity, category, context.getLocalUser(), new User("Wiesiek"));
+                    context.getFridge().addItem(newItem);
+                    dismiss();
+                } else {
+                    missing.insert(0,"Item is missing following attributes: \n");
+                    Toaster.toast(missing.toString());
+                }
             }
-            });
+
+        });
 
         return builder.create();
     }

@@ -11,11 +11,11 @@ public class Toaster {
         Toaster.context = context;
     }
 
-    public static void toast(final String message){
+    public static void toast(final Object message) {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, message.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

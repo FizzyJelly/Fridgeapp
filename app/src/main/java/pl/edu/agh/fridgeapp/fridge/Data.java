@@ -6,11 +6,11 @@ import java.util.List;
 public class Data {
 
     private List<ServerInfo> servers;
+    private  User localUser;
+    private Refrigerator fridge;
 
-
-    public Data() {
-        this.servers = new ArrayList<ServerInfo>();
-        servers.add(new ServerInfo("192.168.0.59",4444));
+    public Data(Refrigerator fridge) {
+        this.fridge = fridge;
     }
 
     public void addServer(ServerInfo server){
@@ -21,4 +21,15 @@ public class Data {
         servers.remove(server);
     }
 
+    public User getLocalUser() {
+        return localUser;
+    }
+
+    public void setLocalUser(User localUser) {
+        this.localUser = localUser;
+    }
+
+    public Refrigerator getFridge() {
+        return fridge;
+    }
 }

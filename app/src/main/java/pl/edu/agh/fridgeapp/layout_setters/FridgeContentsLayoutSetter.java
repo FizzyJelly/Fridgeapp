@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
 
     public FridgeContentsLayoutSetter(MainActivity rootActivity) {
         this.context = rootActivity;
-        this.fridge=context.getFridge();
+        this.fridge = context.getFridge();
     }
 
     @Override
@@ -46,19 +48,24 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
 
         fridge.setExampleList();
 
+
+        View displayView = context.getLayoutInflater().inflate(R.layout.fridge_contents_layout, null);
+        context.setContentView(displayView);
+
+        DrawerLayout drawer = context.findViewById(R.id.fridge_contents_drawer);
+
         //Toolbar settings
-        context.setContentView(R.layout.fridge_contents_layout);
-        Toolbar toolbar = context.findViewById(R.id.fridge_contents_toolbar);
+        Toolbar toolbar = displayView.findViewById(R.id.fridge_contents_toolbar);
         context.setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
-            ((DrawerLayout) context.findViewById(R.id.fridge_contents_drawer)).openDrawer(GravityCompat.START);
+            drawer.openDrawer(GravityCompat.START);
         });
 
         //Drawer settings
         categoryList = context.findViewById(R.id.category_list);
         adapter = new CheckableListAdapter(getDrawerHeaders(), getDrawerChildren(fridge.getCategories()), context, categoryList);
         categoryList.setAdapter(adapter);
-        Button filterButton=context.findViewById(R.id.filter_button);
+        Button filterButton = context.findViewById(R.id.filter_button);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
