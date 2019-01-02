@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FridgeApp</string>
+    <string name="accept_item">Accept Item</string>
+</resources>
