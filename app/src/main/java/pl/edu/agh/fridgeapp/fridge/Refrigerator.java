@@ -18,6 +18,7 @@ public class Refrigerator extends Observable {
     private List<FridgeItem> items;
     private List<ItemCategory> filter;
     private SortOrder sortOrder;
+    private static User common=new User("Common");
 
     public List<FridgeItem> getItems() {
         List<FridgeItem> filtered = new ArrayList<>(items);
@@ -69,15 +70,32 @@ public class Refrigerator extends Observable {
         this.notifyObservers();
     }
 
+    public void removeItem(FridgeItem item){
+        items.remove(item);
+        this.setChanged();
+        this.notifyObservers();
+    }
+
     public void setFilter(List<ItemCategory> filter) {
         this.filter = filter;
         this.setChanged();
         this.notifyObservers();
     }
 
+    public void modifyItemQuantity(FridgeItem item, int offset){
+        item.setQuantity(item.getQuantity()+offset);
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
         this.setChanged();
         this.notifyObservers();
+    }
+
+    public static User getCommon() {
+        return common;
     }
 }

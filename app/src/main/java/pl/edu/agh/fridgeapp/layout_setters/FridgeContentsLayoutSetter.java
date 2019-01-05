@@ -1,6 +1,7 @@
 package pl.edu.agh.fridgeapp.layout_setters;
 
 import android.app.FragmentManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,10 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowInsets;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +19,10 @@ import java.util.TreeMap;
 
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
-import pl.edu.agh.fridgeapp.client.Toaster;
 import pl.edu.agh.fridgeapp.fridge.Refrigerator;
 import pl.edu.agh.fridgeapp.utility.CheckableListAdapter;
 import pl.edu.agh.fridgeapp.utility.ContentsListAdapter;
-import pl.edu.agh.fridgeapp.utility.addItemDialog;
+import pl.edu.agh.fridgeapp.utility.AddItemDialog;
 
 public class FridgeContentsLayoutSetter implements ILayoutSetter {
 
@@ -65,12 +62,26 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
         categoryList = context.findViewById(R.id.category_list);
         adapter = new CheckableListAdapter(getDrawerHeaders(), getDrawerChildren(fridge.getCategories()), context, categoryList);
         categoryList.setAdapter(adapter);
-        Button filterButton = context.findViewById(R.id.filter_button);
-        filterButton.setOnClickListener(new View.OnClickListener() {
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onClick(View v) {
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
                 fridge.setFilter(adapter.getSelectedCategories());
                 fridge.setSortOrder(adapter.getSelectedSortOrder());
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
             }
         });
 
@@ -88,7 +99,7 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
 
         FloatingActionButton addButton = context.findViewById(R.id.item_add_button);
         View popupView = LayoutInflater.from(context).inflate(R.layout.add_item_dialog, null);
-        addItemDialog dialog = new addItemDialog();
+        AddItemDialog dialog = new AddItemDialog();
         dialog.setContext(context);
         FragmentManager fm = context.getFragmentManager();
         addButton.setOnClickListener(v -> {

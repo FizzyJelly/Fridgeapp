@@ -1,9 +1,11 @@
 package pl.edu.agh.fridgeapp.utility;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,6 +78,16 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
             default: categoryImage.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }
 
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ItemDetailsDialog dialog=new ItemDetailsDialog();
+                dialog.setContext(context);
+                dialog.setItem(fridgeContents.get(position));
+                FragmentManager fm=context.getFragmentManager();
+                dialog.show(fm,"Item details");
+            }
+        });
     }
 
     @Override

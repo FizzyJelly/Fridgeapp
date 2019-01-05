@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -17,9 +18,10 @@ import pl.edu.agh.fridgeapp.client.Toaster;
 import pl.edu.agh.fridgeapp.data_classes.ExpiryDate;
 import pl.edu.agh.fridgeapp.data_classes.FridgeItem;
 import pl.edu.agh.fridgeapp.data_classes.ItemCategory;
+import pl.edu.agh.fridgeapp.fridge.Refrigerator;
 import pl.edu.agh.fridgeapp.fridge.User;
 
-public class addItemDialog extends DialogFragment {
+public class AddItemDialog extends DialogFragment {
 
     private MainActivity context;
 
@@ -37,6 +39,13 @@ public class addItemDialog extends DialogFragment {
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, context.getFridge().getCategories());
         Spinner categorySpinner = dialogView.findViewById(R.id.category_spinner);
+
+        CheckBox commonCheckbox = dialogView.findViewById(R.id.common_checkbox);
+
+        EditText descriptionInput = dialogView.findViewById(R.id.description_input);
+
+        EditText priceInput = dialogView.findViewById(R.id.price_input);
+
         categorySpinner.setAdapter(spinnerAdapter);
 
         EditText dateEdit = dialogView.findViewById(R.id.expiry_date_input);
@@ -54,9 +63,9 @@ public class addItemDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 StringBuilder missing = new StringBuilder();
-                String name="";
-                ExpiryDate expiryDate=new ExpiryDate(0,0,0);
-                Integer quantity=0;
+                String name = "";
+                ExpiryDate expiryDate = new ExpiryDate(0, 0, 0);
+                Integer quantity = 0;
                 ItemCategory category = ItemCategory.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
                 if (itemNameInput.getText().length() == 0) {
                     missing.append("Item name \n");
@@ -77,12 +86,19 @@ public class addItemDialog extends DialogFragment {
                     int day = Integer.parseInt(dateEdit.getText().toString().substring(6, 10));
                     expiryDate = new ExpiryDate(year, month, day);
                 }
-                if(missing.length()==0) {
-                    FridgeItem newItem = new FridgeItem(name, expiryDate, "Such an item it is!!", Double.parseDouble("22.11"), quantity, category, context.getLocalUser(), new User("Wiesiek"));
+                if (missing.length() == 0) {
+                    User user;
+                    if (commonCheckbox.isChecked()) {
+                        user = Refrigerator.getCommon();
+                    } else {
+                        user = context.getLocalUser();
+                    }
+                    Double price = Double.parseDouble(priceInput.getText().toString());
+                    FridgeItem newItem = new FridgeItem(name, expiryDate, descriptionInput.getText().toString(), price, quantity, category, user, context.getLocalUser());
                     context.getFridge().addItem(newItem);
                     dismiss();
                 } else {
-                    missing.insert(0,"Item is missing following attributes: \n");
+                    missing.insert(0, "Item is missing following attributes: \n");
                     Toaster.toast(missing.toString());
                 }
             }

@@ -65,4 +65,5 @@ public class MainActivity extends AppCompatActivity {
     public Data getAppData() {
         return appData;
     }
+
 }
