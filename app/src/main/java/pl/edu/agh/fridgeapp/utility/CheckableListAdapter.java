@@ -34,7 +34,6 @@ public class CheckableListAdapter extends BaseExpandableListAdapter {
         groups = new ArrayList<>();
         groupSingleSelectable = new ArrayList<>();
         groupSingleSelectable.addAll(listGroups.values());
-        Collections.reverse(groupSingleSelectable);
         children = new ArrayList<>();
         this.list = list;
 

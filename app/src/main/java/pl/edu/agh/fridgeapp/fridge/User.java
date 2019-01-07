@@ -1,6 +1,8 @@
 package pl.edu.agh.fridgeapp.fridge;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String name;
 

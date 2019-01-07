@@ -39,20 +39,23 @@
             <TextView
                 android:id="@+id/quantity_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/decrease_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/minus_icon"
-                android:layout_marginStart="50dp"/>
+                android:src="@drawable/minus_icon"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:layout_marginStart="90dp"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/increase_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/plus_icon"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:src="@drawable/plus_icon"
                 android:layout_marginStart="20dp"/>
         </LinearLayout>
     </LinearLayout>

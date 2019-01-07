@@ -2,9 +2,10 @@ package pl.edu.agh.fridgeapp.data_classes;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ExpiryDate implements Comparable{
+public class ExpiryDate implements Comparable, Serializable{
 
     private final int day;
     private final int month;

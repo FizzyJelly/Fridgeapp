@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
     @Override
     public void setLayout() {
 
-        fridge.setExampleList();
+        //fridge.setExampleList();
 
 
         View displayView = context.getLayoutInflater().inflate(R.layout.fridge_contents_layout, null);
@@ -85,6 +86,12 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
             }
         });
 
+        Button changeUserButton = context.findViewById(R.id.change_user_button);
+        changeUserButton.setOnClickListener(v -> {
+            context.setLayoutSetter(new LoginLayoutSetter(context));
+        });
+
+
         //Add contents update on Drawer.closed
 
 
@@ -114,8 +121,8 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
     public Map<String, Boolean> getDrawerHeaders() {
 
         Map<String, Boolean> listGroups = new TreeMap<>();
-        listGroups.put("Categories", true);
-        listGroups.put("Sort by", false);
+        listGroups.put("Categories", false);
+        listGroups.put("Sort by", true);
         return listGroups;
     }
 

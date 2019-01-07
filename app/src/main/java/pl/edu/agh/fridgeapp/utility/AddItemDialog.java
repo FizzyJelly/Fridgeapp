@@ -3,6 +3,7 @@ package pl.edu.agh.fridgeapp.utility;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
@@ -89,13 +95,14 @@ public class AddItemDialog extends DialogFragment {
                 if (missing.length() == 0) {
                     User user;
                     if (commonCheckbox.isChecked()) {
-                        user = Refrigerator.getCommon();
+                        user = new User("Common");
                     } else {
                         user = context.getLocalUser();
                     }
                     Double price = Double.parseDouble(priceInput.getText().toString());
                     FridgeItem newItem = new FridgeItem(name, expiryDate, descriptionInput.getText().toString(), price, quantity, category, user, context.getLocalUser());
                     context.getFridge().addItem(newItem);
+
                     dismiss();
                 } else {
                     missing.insert(0, "Item is missing following attributes: \n");

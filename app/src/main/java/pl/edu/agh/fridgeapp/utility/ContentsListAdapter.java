@@ -28,7 +28,7 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
 
     @Override
     public void update(Observable o, Object arg) {
-        this.fridgeContents=context.getFridge().getItems();
+        this.fridgeContents = context.getFridge().getItems();
         this.notifyDataSetChanged();
     }
 
@@ -40,8 +40,8 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
     }
 
     public ContentsListAdapter(MainActivity context) {
-        this.context=context;
-        fridgeContents=this.context.getFridge().getItems();
+        this.context = context;
+        fridgeContents = this.context.getFridge().getItems();
 
     }
 
@@ -65,27 +65,36 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
         ImageView categoryImage = layout.findViewById(R.id.category_image);
 
         name.setText(fridgeContents.get(position).getName());
-        quantity.setText("Quantity: " + ((Integer) fridgeContents.get(position).getQuantity()).toString());
-        expiryDate.setText("Expires on: " + fridgeContents.get(position).getExpiryDate().toString());
-        owner.setText("Owner: " + fridgeContents.get(position).getOwner().toString());
-        ItemCategory category=fridgeContents.get(position).getCategory();
+        quantity.setText(((Integer) fridgeContents.get(position).getQuantity()).toString());
+        expiryDate.setText(fridgeContents.get(position).getExpiryDate().toString());
+        owner.setText(fridgeContents.get(position).getOwner().toString());
+        ItemCategory category = fridgeContents.get(position).getCategory();
 
-        switch (category){
-            case MEAT: categoryImage.setBackgroundColor(Color.parseColor("#FF1111")); break;
-            case DIARY: categoryImage.setBackgroundColor(Color.parseColor("#FFFF66")); break;
-            case FRUITS: categoryImage.setBackgroundColor(Color.parseColor("#FF69B4")); break;
-            case VEGETABLE: categoryImage.setBackgroundColor(Color.parseColor("#66CD00")); break;
-            default: categoryImage.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        switch (category) {
+            case MEAT:
+                categoryImage.setImageResource(R.drawable.meat);
+                break;
+            case DIARY:
+                categoryImage.setImageResource(R.drawable.milk);
+                break;
+            case FRUITS:
+                categoryImage.setImageResource(R.drawable.fruits);
+                break;
+            case VEGETABLE:
+                categoryImage.setImageResource(R.drawable.lettuce);
+                break;
+            default:
+                categoryImage.setImageResource(R.drawable.misc);
         }
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemDetailsDialog dialog=new ItemDetailsDialog();
+                ItemDetailsDialog dialog = new ItemDetailsDialog();
                 dialog.setContext(context);
                 dialog.setItem(fridgeContents.get(position));
-                FragmentManager fm=context.getFragmentManager();
-                dialog.show(fm,"Item details");
+                FragmentManager fm = context.getFragmentManager();
+                dialog.show(fm, "Item details");
             }
         });
     }

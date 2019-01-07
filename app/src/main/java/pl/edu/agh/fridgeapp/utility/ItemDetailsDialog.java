@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import pl.edu.agh.fridgeapp.R;
@@ -54,8 +55,8 @@ public class ItemDetailsDialog extends DialogFragment {
         priceView.setText(price);
         ownerView.setText(owner);
 
-        Button increaseButton = dialogView.findViewById(R.id.increase_button);
-        Button decreaseButton = dialogView.findViewById(R.id.decrease_button);
+        ImageButton increaseButton = dialogView.findViewById(R.id.increase_button);
+        ImageButton decreaseButton = dialogView.findViewById(R.id.decrease_button);
         Button removeButton = dialogView.findViewById(R.id.remove_button);
 
         dialogView.setOnClickListener(v -> dismiss());
