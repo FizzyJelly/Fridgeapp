@@ -99,6 +99,8 @@ public class ContentsListAdapter extends RecyclerView.Adapter implements Observe
         });
     }
 
+
+
     @Override
     public int getItemCount() {
         return fridgeContents.size();

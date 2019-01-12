@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
 import pl.edu.agh.fridgeapp.client.Toaster;
@@ -29,6 +32,12 @@ public class LoginLayoutSetter implements ILayoutSetter {
         loginButton.setOnClickListener(v -> {
             if (usernameInput.getText().length() != 0) {
                 context.setLocalUser(new User(usernameInput.getText().toString()));
+                if(context.getFridge().getOwners().isEmpty()){
+                    List<User> newOwner=new ArrayList<>();
+                    newOwner.add(context.getLocalUser());
+                    context.getFridge().setOwners(newOwner);
+                }
+
                 context.setLayoutSetter(new FridgeContentsLayoutSetter(context));
             } else {
                 Toaster.toast("Enter username first!");

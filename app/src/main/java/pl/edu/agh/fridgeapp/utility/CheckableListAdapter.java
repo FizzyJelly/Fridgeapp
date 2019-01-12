@@ -11,24 +11,25 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import pl.edu.agh.fridgeapp.R;
+import pl.edu.agh.fridgeapp.activities.MainActivity;
 import pl.edu.agh.fridgeapp.data_classes.CheckableListElement;
 import pl.edu.agh.fridgeapp.data_classes.ItemCategory;
 import pl.edu.agh.fridgeapp.data_classes.SortOrder;
+import pl.edu.agh.fridgeapp.fridge.User;
 
 public class CheckableListAdapter extends BaseExpandableListAdapter {
 
     private List<TextView> groups;
     private List<Boolean> groupSingleSelectable;
     private List<List<CheckableListElement>> children;
-    private final Context context;
+    private final MainActivity context;
     private final ExpandableListView list;
 
-    public CheckableListAdapter(Map<String, Boolean> listGroups, List<List<String>> childTexts, Context context, ExpandableListView list) {
+    public CheckableListAdapter(Map<String, Boolean> listGroups, List<List<String>> childTexts, MainActivity context, ExpandableListView list) {
 
         this.context = context;
         groups = new ArrayList<>();
@@ -70,6 +71,11 @@ public class CheckableListAdapter extends BaseExpandableListAdapter {
         setListeners();
     }
 
+    public void updateOnCheck(){
+        context.getFridge().setCategoryFilter(getSelectedCategories());
+        context.getFridge().setSortOrder(getSelectedSortOrder());
+    }
+
     public List<ItemCategory> getSelectedCategories() {
         List<ItemCategory> selected = new ArrayList<>();
         for (CheckableListElement child : children.get(0)) {
@@ -78,6 +84,10 @@ public class CheckableListAdapter extends BaseExpandableListAdapter {
             }
         }
         return selected;
+    }
+
+    public List<User> getSelectedOwners(){
+        return new ArrayList<>();
     }
 
     public SortOrder getSelectedSortOrder() {

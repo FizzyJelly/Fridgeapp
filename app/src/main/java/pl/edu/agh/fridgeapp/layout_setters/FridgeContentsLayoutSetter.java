@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,6 +53,7 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
         context.setContentView(displayView);
 
         DrawerLayout drawer = context.findViewById(R.id.fridge_contents_drawer);
+        FrameLayout drawerFrame=context.findViewById(R.id.drawer_frame);
 
         //Toolbar settings
         Toolbar toolbar = displayView.findViewById(R.id.fridge_contents_toolbar);
@@ -59,32 +62,14 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
             drawer.openDrawer(GravityCompat.START);
         });
 
-        //Drawer settings
-        categoryList = context.findViewById(R.id.category_list);
-        adapter = new CheckableListAdapter(getDrawerHeaders(), getDrawerChildren(fridge.getCategories()), context, categoryList);
-        categoryList.setAdapter(adapter);
-        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                fridge.setFilter(adapter.getSelectedCategories());
-                fridge.setSortOrder(adapter.getSelectedSortOrder());
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+        //Drawer settings (content of the drawer)
+        drawerFrame.setOnClickListener(v -> {
+            //consumes the click
         });
+        categoryList = context.findViewById(R.id.category_list);
+        adapter = new CheckableListAdapter(getDrawerHeaders(), getDrawerChildren(), context, categoryList);
+        categoryList.setAdapter(adapter);
+        categoryList.expandGroup(0);
 
         Button changeUserButton = context.findViewById(R.id.change_user_button);
         changeUserButton.setOnClickListener(v -> {
@@ -92,14 +77,13 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
         });
 
 
-        //Add contents update on Drawer.closed
-
-
         //Initial items list
         contentsAdapter = new ContentsListAdapter(context);
         contentsList = context.findViewById(R.id.contents_list);
         contentsList.setAdapter(contentsAdapter);
         contentsList.setLayoutManager(new LinearLayoutManager(context));
+
+
 
 
         //Add item dialog
@@ -120,15 +104,16 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
 
     public Map<String, Boolean> getDrawerHeaders() {
 
-        Map<String, Boolean> listGroups = new TreeMap<>();
+        Map<String, Boolean> listGroups = new LinkedHashMap<>();
         listGroups.put("Categories", false);
         listGroups.put("Sort by", true);
+        listGroups.put("Owners", false);
         return listGroups;
     }
 
-    public List<List<String>> getDrawerChildren(List<String> categories) {
+    public List<List<String>> getDrawerChildren() {
         List<List<String>> drawerChildren = new ArrayList<>();
-        drawerChildren.add(categories);
+        drawerChildren.add(fridge.getCategories());
 
         List<String> sortWays = new ArrayList<>();
         sortWays.add("Name");
@@ -136,6 +121,9 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
         sortWays.add("Category");
 
         drawerChildren.add(sortWays);
+
+        drawerChildren.add(fridge.getOwners());
+
 
         return drawerChildren;
     }

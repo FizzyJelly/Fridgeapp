@@ -25,6 +25,10 @@
                 android:background="@color/colorPrimaryDark"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                 app:navigationIcon="@drawable/ic_menu_black_24dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/contents_list"
@@ -36,6 +40,7 @@
 
 
         <FrameLayout
+            android:id="@+id/drawer_frame"
             android:layout_width="175dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"

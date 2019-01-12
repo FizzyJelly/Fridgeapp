@@ -1,6 +1,8 @@
 package pl.edu.agh.fridgeapp.data_classes;
 
-public enum ItemCategory {
+import java.io.Serializable;
+
+public enum ItemCategory implements Serializable {
 
     DIARY("Diary"),MEAT("Meat"),VEGETABLE("Vegetable"),FRUITS("Fruits"), MISCELLANEOUS("Miscellaneous");
 

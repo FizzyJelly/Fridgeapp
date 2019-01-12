@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import pl.edu.agh.fridgeapp.data_classes.ExpiryDate;
 import pl.edu.agh.fridgeapp.data_classes.FridgeItem;
@@ -18,19 +17,21 @@ public class Refrigerator extends Observable {
 
     private String name;
     private List<FridgeItem> items;
-    private List<ItemCategory> filter;
+    private List<ItemCategory> categoryFilter;
+    private List<User> ownerFilter;
+    private List<User> owners;
     private SortOrder sortOrder;
 
     public List<FridgeItem> getItems() {
         List<FridgeItem> filtered = new ArrayList<>(items);
 
-        if (!filter.isEmpty()) {
+        if (!categoryFilter.isEmpty()) {
 
             Iterator<FridgeItem> iterator = filtered.iterator();
             FridgeItem temp;
             while (iterator.hasNext()) {
                 temp = iterator.next();
-                if (!filter.contains(temp.getCategory())) {
+                if (!categoryFilter.contains(temp.getCategory())) {
                     iterator.remove();
                 }
             }
@@ -40,10 +41,16 @@ public class Refrigerator extends Observable {
         return filtered;
     }
 
+    public void setOwners(List<User> owners) {
+        this.owners = owners;
+    }
+
     public Refrigerator(String name) {
         this.name = name;
-        this.filter = new ArrayList<>();
+        this.categoryFilter = new ArrayList<>();
         this.sortOrder = SortOrder.BY_NAME;
+        this.ownerFilter= new ArrayList<>();
+
     }
 
     public void setExampleList() {
@@ -95,10 +102,12 @@ public class Refrigerator extends Observable {
         this.notifyObservers();
     }
 
-    public void setFilter(List<ItemCategory> filter) {
-        this.filter = filter;
-        this.setChanged();
-        this.notifyObservers();
+    public void setCategoryFilter(List<ItemCategory> filter) {
+        this.categoryFilter = filter;
+        if (!this.hasChanged()) {
+            this.setChanged();
+            this.notifyObservers();
+        }
     }
 
     public void modifyItemQuantity(FridgeItem item, int offset) {
@@ -108,14 +117,36 @@ public class Refrigerator extends Observable {
     }
 
 
+    public List<String> getOwners() {
+        List<String> owners = new ArrayList<>();
+
+        for (User owner : this.owners) {
+            owners.add(owner.getName());
+        }
+
+        return owners;
+    }
+
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
-        this.setChanged();
-        this.notifyObservers();
+        if (!this.hasChanged()) {
+            this.setChanged();
+            this.notifyObservers();
+        }
+
+    }
+
+    public void setOwnerFilter(List<User> filter) {
+        this.ownerFilter = filter;
+        if (!this.hasChanged()) {
+            this.setChanged();
+            this.notifyObservers();
+        }
     }
 
 
     public String getName() {
         return name;
     }
+
 }

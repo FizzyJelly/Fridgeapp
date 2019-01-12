@@ -26,11 +26,13 @@ public class CheckableListListener implements ExpandableListView.OnChildClickLis
             if (((FrameLayout) v).getChildAt(0) instanceof CheckedTextView) {
                 temp = (CheckedTextView) (((FrameLayout) v).getChildAt(0));
 
+
                 if(groupSingleSelectable.get(groupPosition)){
                     handleSingleSelectable(temp,groupPosition,childPosition);
                 } else {
                     handleMultipleSelectable(temp,groupPosition,childPosition);
                 }
+                listAdapter.updateOnCheck();
             }
         }
         return true;

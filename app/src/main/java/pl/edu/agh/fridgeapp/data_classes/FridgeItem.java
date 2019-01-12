@@ -1,8 +1,10 @@
 package pl.edu.agh.fridgeapp.data_classes;
 
+import java.io.Serializable;
+
 import pl.edu.agh.fridgeapp.fridge.User;
 
-public class FridgeItem {
+public class FridgeItem implements Serializable{
 
     private String name;
     private ExpiryDate expiryDate;
