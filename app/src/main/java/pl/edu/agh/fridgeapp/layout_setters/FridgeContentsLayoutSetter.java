@@ -1,7 +1,6 @@
 package pl.edu.agh.fridgeapp.layout_setters;
 
 import android.app.FragmentManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,12 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import pl.edu.agh.fridgeapp.R;
 import pl.edu.agh.fridgeapp.activities.MainActivity;
@@ -60,6 +59,10 @@ public class FridgeContentsLayoutSetter implements ILayoutSetter {
         context.setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
             drawer.openDrawer(GravityCompat.START);
+        });
+        ImageButton financeButton = displayView.findViewById(R.id.finance_button);
+        financeButton.setOnClickListener(v->{
+            context.setLayoutSetter(new FinanceSummaryLayoutSetter(context));
         });
 
         //Drawer settings (content of the drawer)
