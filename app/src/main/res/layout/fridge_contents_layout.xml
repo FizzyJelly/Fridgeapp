@@ -24,11 +24,22 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimaryDark"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                app:navigationIcon="@drawable/ic_menu_black_24dp" />
+                app:navigationIcon="@drawable/ic_menu_black_24dp">
+
+                <ImageButton
+                    android:id="@+id/finance_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dollar_icon"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:layout_gravity="end|center_vertical"
+                    android:paddingEnd="20dp"/>
+            </android.support.v7.widget.Toolbar>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000"/>
+                android:background="#000000" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/contents_list"
@@ -57,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="30dp"
-                android:text="Switch user"/>
+                android:text="Switch user" />
 
 
         </FrameLayout>

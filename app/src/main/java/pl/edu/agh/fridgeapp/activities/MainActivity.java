@@ -7,23 +7,21 @@ import android.os.Bundle;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import pl.edu.agh.fridgeapp.client.Toaster;
-import pl.edu.agh.fridgeapp.data_classes.FridgeItem;
-import pl.edu.agh.fridgeapp.fridge.Data;
-import pl.edu.agh.fridgeapp.fridge.Refrigerator;
-import pl.edu.agh.fridgeapp.fridge.User;
-import pl.edu.agh.fridgeapp.layout_setters.FridgeContentsLayoutSetter;
-import pl.edu.agh.fridgeapp.layout_setters.ILayoutSetter;
-import pl.edu.agh.fridgeapp.layout_setters.LoginLayoutSetter;
+import pl.edu.agh.fridgeapp.view_controllers.Toaster;
+import pl.edu.agh.fridgeapp.model.Data;
+import pl.edu.agh.fridgeapp.model.Refrigerator;
+import pl.edu.agh.fridgeapp.model.User;
+import pl.edu.agh.fridgeapp.view_controllers.FinanceSummaryLayoutSetter;
+import pl.edu.agh.fridgeapp.view_controllers.FridgeContentsLayoutSetter;
+import pl.edu.agh.fridgeapp.view_controllers.ILayoutSetter;
+import pl.edu.agh.fridgeapp.view_controllers.LoginLayoutSetter;
 
 public class MainActivity extends AppCompatActivity {
 
     private ILayoutSetter layoutSetter;
+    public static String savePath = "savedContent";
     private Data appData;
-    private static String savePath ="savedContent";
 
 
     @Override
@@ -31,17 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Toaster.setContext(this);
-        appData = new Data(loadSavedContents());
 
+        appData = new Data(this);
 
-
-        if (getLocalUser() == null) {
-            setLayoutSetter(new LoginLayoutSetter(this));
-
-        } else {
+        try (ObjectInputStream inputStream = new ObjectInputStream(openFileInput(savePath))) {
+            appData.readExternal(inputStream);
             setLayoutSetter(new FridgeContentsLayoutSetter(this));
-
+        } catch (ClassNotFoundException | IOException | ClassCastException ex) {
+            ex.printStackTrace();
+            setLayoutSetter(new LoginLayoutSetter(this));
         }
+
     }
 
 
@@ -50,15 +48,22 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(openFileOutput(savePath, Context.MODE_PRIVATE))) {
-            getFridge().setCategoryFilter(new ArrayList<>());
-            outputStream.writeObject(getFridge().getName());
-            outputStream.writeObject(getFridge().getItems());
-            outputStream.writeObject(getFridge().getOwners());
-
+            appData.writeExternal(outputStream);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (layoutSetter instanceof FinanceSummaryLayoutSetter) {
+            setLayoutSetter(new FridgeContentsLayoutSetter(this));
+        }
+    }
+
+    public void setAppData(Data appData) {
+        this.appData = appData;
     }
 
     public Refrigerator getFridge() {
@@ -79,36 +84,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLayoutSetter(ILayoutSetter layoutSetter) {
         this.layoutSetter = layoutSetter;
+        if (this.layoutSetter instanceof LoginLayoutSetter) {
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(openFileOutput(savePath, Context.MODE_PRIVATE))) {
+                appData.writeExternal(outputStream);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         this.setLayout();
     }
-
-    public Data getAppData() {
-        return appData;
-    }
-
-    public Refrigerator loadSavedContents() {
-        Refrigerator fridge;
-
-        try (ObjectInputStream inputStream = new ObjectInputStream(openFileInput(savePath))) {
-            fridge=new Refrigerator((String) inputStream.readObject());
-            fridge.setItems((List<FridgeItem>) inputStream.readObject());
-            List<User> owners=new ArrayList<>();
-            List<String> names=(List<String>) inputStream.readObject();
-            for(String name: names){
-                owners.add(new User(name));
-            }
-            fridge.setOwners(owners);
-        } catch (IOException | ClassCastException | ClassNotFoundException ex) {
-            Toaster.toast("Unable to load saved content");
-            ex.printStackTrace();
-            fridge=new Refrigerator("Temporary");
-            fridge.setItems(new ArrayList<>());
-            fridge.setOwners(new ArrayList<>());
-        }
-
-        return fridge;
-    }
-
 
 
 }
