@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import pl.edu.agh.fridgeapp.activities.MainActivity;
+import pl.edu.agh.fridgeapp.view_controllers.Toaster;
 
 public class Data implements Externalizable {
 
@@ -51,9 +52,7 @@ public class Data implements Externalizable {
     public void createNewTemporaryFridge() {
         fridge = new Refrigerator("Temporary");
         fridge.setItems(new ArrayList<>());
-        List<User> newOwner = new ArrayList<>();
-        newOwner.add(getLocalUser());
-        fridge.setOwners(newOwner);
+        fridge.addNewUser(localUser);
     }
 
 

@@ -63,9 +63,11 @@ public class Refrigerator extends Observable implements Externalizable {
 
 
     public Refrigerator() {
+        this.items=new ArrayList<>();
         this.categoryFilter = new ArrayList<>();
         this.sortOrder = SortOrder.BY_NAME;
         this.ownerFilter = new ArrayList<>();
+        this.owners=new ArrayList<>();
     }
 
     public Refrigerator(String name) {

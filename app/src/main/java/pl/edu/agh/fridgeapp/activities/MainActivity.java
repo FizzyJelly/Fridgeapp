@@ -20,7 +20,7 @@ import pl.edu.agh.fridgeapp.view_controllers.LoginLayoutSetter;
 public class MainActivity extends AppCompatActivity {
 
     private ILayoutSetter layoutSetter;
-    public static String savePath = "savedContent";
+    public static String savePath = "savePath";
     private Data appData;
 
 
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLayoutSetter(ILayoutSetter layoutSetter) {
         this.layoutSetter = layoutSetter;
-        if (this.layoutSetter instanceof LoginLayoutSetter) {
+        if (this.layoutSetter instanceof LoginLayoutSetter && appData!=null && appData.getCurrentFridge()!=null) {
             try (ObjectOutputStream outputStream = new ObjectOutputStream(openFileOutput(savePath, Context.MODE_PRIVATE))) {
                 appData.writeExternal(outputStream);
             } catch (IOException ex) {
